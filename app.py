@@ -3,6 +3,7 @@ from flask import Flask
 
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 flask_app = Flask(__name__)
 
@@ -13,6 +14,7 @@ flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MOD
 
 
 db = SQLAlchemy(flask_app)
+migrate = Migrate(flask_app, db)
 
 from apps import register_blueprints
 

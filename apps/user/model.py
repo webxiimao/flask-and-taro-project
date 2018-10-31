@@ -6,15 +6,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
-    __tablename__ = 'User'
-    __table_args__ = {"useexisting": True}
+    # __tablename__ = 'User'
+    # __table_args__ = {"useexisting": True}
 
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), nullable=False, unique=True, server_default='', index=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     nickname = db.Column(db.String(24), nullable=False)
     login_time = db.Column(db.Integer)
+    headshot = db.Column(db.String(128))
     _password = db.Column(db.String(128), nullable=False)
+    isDelete = db.Column(db.Integer, default=0, nullable=False)
+    field1 = db.Column(db.String(128))
 
     def __init__(self, username, password, email, nickname):
         self.username = username
@@ -66,7 +69,7 @@ if __name__ == "__main__":
     import sys
     import os
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.getcwd())))
-    reload(sys)
+    # reload(sys)
 
-    db.drop_all()
+    # db.drop_all()
     db.create_all()

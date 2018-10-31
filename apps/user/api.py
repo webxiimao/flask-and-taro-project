@@ -23,7 +23,7 @@ def register():
         'nickname' : user.nickname,
         'email' : user.email
     }
-    return jsonify(common.trueReturn(returnUser,u'用户注册成功'))
+    return jsonify(common.trueReturn(returnUser,'用户注册成功'))
 
 
 
@@ -32,7 +32,7 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
     if (not username or not password):
-        return jsonify(common.falseReturn('',u'用户名或密码不能为空'))
+        return jsonify(common.falseReturn('','用户名或密码不能为空'))
     else:
         auth = Auth()
         return auth.authenticate(username, password)
@@ -51,7 +51,16 @@ def info():
             'email': user.email,
             'nickname':user.nickname
         }
-        result = common.trueReturn(returnUser, u"请求成功")
+        result = common.trueReturn(returnUser, "请求成功")
+    return jsonify(result)
+
+
+
+
+@userRoute.route('/logout', methods=["POST"])
+def logout():
+    auth = Auth()
+    result = auth.kill_auth(request)
     return jsonify(result)
 
 
