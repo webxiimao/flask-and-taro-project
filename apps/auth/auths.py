@@ -1,6 +1,6 @@
 #-*- coding=utf8 -*-
 import jwt,datetime,time
-from apps.user.model import User
+from apps.models.user import User
 from flask import jsonify
 from apps.common import trueReturn,falseReturn
 from config import Config

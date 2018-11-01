@@ -1,10 +1,8 @@
 #-*- coding=utf8 -*-
-from .model import User
+from apps.models.user import User
 from flask import jsonify,request,Blueprint
 from apps.auth.auths import Auth
 from .. import common
-from app import flask_app
-
 
 userRoute = Blueprint('userRoute',__name__)
 

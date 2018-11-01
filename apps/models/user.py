@@ -3,6 +3,7 @@ from app import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
+from .articles import Articles, Category
 
 
 class User(db.Model):
@@ -18,6 +19,7 @@ class User(db.Model):
     _password = db.Column(db.String(128), nullable=False)
     isDelete = db.Column(db.Integer, default=0, nullable=False)
     field1 = db.Column(db.String(128))
+    articles = db.relationship("Articles", backref="author", lazy="dynamic")
 
     def __init__(self, username, password, email, nickname):
         self.username = username
