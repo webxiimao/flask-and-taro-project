@@ -34,6 +34,26 @@ def init_app(app):
 
 init_app(flask_app)
 
+'''
+设置日志
+'''
+if flask_app.debug is not True:
+    import logging
+    from logging.handlers import RotatingFileHandler
+    file_handler = RotatingFileHandler('python.log', maxBytes=1024 * 1024 * 100, backupCount=20)
+    file_handler.setLevel(logging.ERROR)
+    flask_app.logger.addHandler(file_handler)
+
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]'
+    ))
+
+    @flask_app.errorhandler(500)
+    def internal_error(exception):
+        flask_app.logger.error(exception)
+
+
 if __name__ == '__main__':
     flask_app.config['DEBUG'] = True
     flask_app.run()
