@@ -3,6 +3,7 @@ from flask import Blueprint
 from flask_restful import Api
 from apps.api.v1.test import Hello
 from apps.api.v1.articles import CreateArticle,CreateCategory
+from apps.models.girls import girls_tag,girls_album,girls_img
 
 
 def register_views(app):

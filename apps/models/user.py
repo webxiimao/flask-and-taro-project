@@ -16,6 +16,7 @@ class User(db.Model):
     nickname = db.Column(db.String(24), nullable=False)
     login_time = db.Column(db.Integer)
     headshot = db.Column(db.String(128))
+    real_avatar = db.Column(db.String(128))
     _password = db.Column(db.String(128), nullable=False)
     isDelete = db.Column(db.Integer, default=0, nullable=False)
     field1 = db.Column(db.String(128))

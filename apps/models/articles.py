@@ -5,6 +5,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
 
+'''
+文章标签关联表
+'''
+article_tags = db.Table('article_tags',
+                         db.Column('article_id',db.Integer,db.ForeignKey('articles.id'),primary_key=True),
+                         db.Column('tag_id',db.Integer,db.ForeignKey('tags.id'),primary_key=True)
+                         )
 
 
 class Articles(db.Model):
@@ -18,6 +25,7 @@ class Articles(db.Model):
     isDelete = db.Column(db.Integer,default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    tag = db.relationship('Tags',secondary=article_tags, backref='articles',lazy='dynamic')
 
 
     def __init__(self, title, content, user_id, category_id):
@@ -68,6 +76,20 @@ class Category(db.Model):
 
     def __repr__(self):
         return '<Category %r>' % (self.name)
+
+
+class Tags(db.Model):
+    '''
+    标签模块
+    '''
+    id = db.Column(db.Integer, primary_key=True, nullable=True)
+    tag = db.Column(db.String(24), nullable=True, unique=True)
+
+    def __init__(self, tag):
+        self.tag = tag
+
+    def __repr__(self):
+        return '<Tags %r>' % (self.tag)
 
 
 
