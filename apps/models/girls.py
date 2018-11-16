@@ -43,10 +43,12 @@ class girls_img(db.Model):
     '''
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     update_time = db.Column(db.DateTime, default=datetime.now)
-    img_path = db.Column(db.String(256),nullable=False, unique=True)
+    img_path = db.Column(db.String(256))
     #爬虫相关 1:初始状态  2:正在进行   3:已完成
     img_status = db.Column(db.Integer, default=1, nullable=False)
-    init_url = db.Column(db.String(48))
+    # init_url = db.Column(db.String(1024))
+    img_url = db.Column(db.String(1024))
+    girls_album_id = db.Column(db.Integer ,db.ForeignKey('girls_album.id'))
 
     def __repr__(self):
         return '<girls_img {}>'.format(self.tag)
