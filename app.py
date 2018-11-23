@@ -1,6 +1,6 @@
 #-*- coding:utf8 -*-
 from flask import Flask, request
-
+from flask_docs import ApiDoc
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -54,6 +54,9 @@ if flask_app.debug is not True:
     @flask_app.errorhandler(500)
     def internal_error(exception):
         flask_app.logger.error(exception)
+
+
+ApiDoc(flask_app)
 
 
 if __name__ == '__main__':
