@@ -4,6 +4,7 @@ from flask import jsonify,request,Blueprint
 from apps.auth.auths import Auth
 from .. import common
 import os
+import re
 
 userRoute = Blueprint('userRoute',__name__)
 
@@ -14,19 +15,22 @@ def register():
     username = request.form.get("username")
     nickname = request.form.get("nickname")
     password = request.form.get("password")
-    try:
-        user = User(email = email, username = username, nickname = nickname, password = User.set_password(password))
-        result = User.add(user)
-    except:
-        return jsonify(common.falseReturn('', '用户注册失败'))
-    else:
-        returnUser = {
-            'id': user.id,
-            'username' : user.username,
-            'nickname' : user.nickname,
-            'email' : user.email
-        }
-        return jsonify(common.trueReturn(returnUser,'用户注册成功'))
+
+    msg = "参数错误"
+    if username and email and nickname and password:
+        if (User.query.filter_by(username=username).first() is None) and (User.query.filter_by(email=email).first() is None):
+            if bool(re.match(r'\w+@\w+.com',email)):
+                user = User(email = email, username = username, nickname = nickname, password = User.set_password(password))
+                result = User.add(user)
+                returnUser = {
+                    'id': user.id,
+                    'username': user.username,
+                    'nickname': user.nickname,
+                    'email': user.email
+                }
+                return jsonify(common.trueReturn(returnUser, '用户注册成功'))
+        msg = "该用户已存在，请直接登录"
+    return jsonify(common.falseReturn('',msg))
 
 
 
