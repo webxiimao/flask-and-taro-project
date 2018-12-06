@@ -4,7 +4,7 @@ from flask_restful import Api
 from apps.api.v1.test import Hello
 from apps.api.v1.articles import CreateArticle,CreateCategory,CreateComment,getComment
 from apps.api.v1.girls import getGirlsAlbum,getGirlsTags,getGirlsImg
-from apps.models.girls import girls_tag,girls_album,girls_img
+from apps.models.models import girls_tag,girls_album,girls_img
 
 
 def register_views(app):
@@ -16,7 +16,7 @@ def register_views(app):
     api.add_resource(getGirlsAlbum, '/girls/getAlbum')
     api.add_resource(getGirlsTags, '/girls/getTags')
     api.add_resource(getGirlsImg, '/girls/getImgs')
-    api.add_resource(getComment, '/article/getList')
+    api.add_resource(getComment, '/article/getList2')
 
 
 def create_blueprint_v1():

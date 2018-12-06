@@ -1,7 +1,6 @@
 #-*- coding=utf8 -*-
 from apps.libs.redprint import Redprint
-from apps.models.articles import Articles,Category,Comment
-from apps.models.user import User
+from apps.models.models import User,Articles,Category,Comment
 from flask import request,jsonify
 from flask_restful import Resource,Api, reqparse,marshal_with,fields
 from apps.common import trueReturn,falseReturn,true_serializer
@@ -77,6 +76,7 @@ class CreateComment(Resource):
         parser.add_argument('content',type=str)
         parser.add_argument('article_id',type=int)
         parser.add_argument('parent_id',type=int)
+        parser.add_argument('reply_uid',type=int)
         comment = parser.parse_args()
         c = dict(comment)
         com = Comment(**c)
@@ -87,15 +87,34 @@ class CreateComment(Resource):
 
 
 
+
+response_getcomment_field = {
+    'id':fields.Integer,
+    'user_id':fields.Integer,
+    'article_id':fields.Integer,
+    'parent_id':fields.Integer,
+    'content':fields.String,
+    'comment':fields.List(fields.Nested({
+        'id':fields.Integer,
+        'user_id':fields.Integer,
+        'article_id':fields.Integer,
+        'parent_id':fields.Integer,
+        'content':fields.String,
+    }))
+}
 class getComment(Resource):
     '''
     获取评论
     '''
-
-    @marshal_with(true_serializer(response_comment_field))
+    @marshal_with(true_serializer(response_getcomment_field))
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('article_id',type=int)
-        articleId = parser.parse_args()['article_id']
-        print(articleId)
-        return falseReturn('', 'error')
+        article_id = parser.parse_args()['article_id']
+        filter = {
+            Comment.article_id == article_id,
+            Comment.parent_id == None
+        }
+        comment = Comment.query.filter(*filter).all()
+        print(comment)
+        return trueReturn(comment, 'success')

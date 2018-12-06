@@ -1,7 +1,6 @@
 #-*- coding=utf8 -*-
 from apps.libs.redprint import Redprint
-from apps.models.girls import girls_album,girls_tag,girls_img
-from apps.models.user import User
+from apps.models.models import girls_album,girls_tag,girls_img,User
 from flask import request,jsonify
 from flask_restful import Resource,Api, reqparse,marshal_with,fields
 from apps.common import trueReturn,falseReturn,true_serializer

@@ -1,5 +1,5 @@
 #-*- coding=utf8 -*-
-from apps.models.user import User
+from apps.models.models import User
 from flask import jsonify,request,Blueprint
 from apps.auth.auths import Auth
 from .. import common
