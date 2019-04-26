@@ -9,10 +9,6 @@ import math
 import json
 
 
-
-
-
-
 response_album_fields = {
     'id':fields.Integer(attribute="albumId"),
     'girls_tag_id':fields.Integer,
