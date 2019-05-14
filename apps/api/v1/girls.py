@@ -79,6 +79,8 @@ response_tags = {
         'id':fields.Integer,
         'title':fields.String,
         'tag':fields.String,
+        'cover_img':fields.String,
+        'local_cover_img':fields.String
     }))
 
 }
@@ -87,7 +89,6 @@ class getGirlsTags(Resource):
     '''
     返回图片标签
     '''
-
     @marshal_with(true_serializer(response_tags))
     def get(self):
         '''
@@ -95,8 +96,19 @@ class getGirlsTags(Resource):
         :return:
         '''
         tags = girls_tag.query.all()
+        list = []
+        for tag in tags:
+            list.append({
+                'id':tag.id,
+                'title':tag.title,
+                'tag':tag.tag,
+                'cover_img':tag.cover_img,
+                'local_cover_img':"/static/girlsImg/%s"%tag.local_cover_img,
+
+            })
+
         return trueReturn({
-            'list':tags
+            'list':list
         },'success')
 
 
@@ -142,6 +154,71 @@ class getGirlsImg(Resource):
         except Exception as e:
             print(e)
             return falseReturn('',e)
+
+
+
+response_allImgs = {
+    'list':fields.List(fields.Nested({
+        'id':fields.Integer,
+        'girls_album_id':fields.Integer,
+        'img_url':fields.String,
+        'local_img_url':fields.String
+    })),
+    'pageInfo':fields.Nested(response_pageInfo)
+
+}
+
+class getAllImgs(Resource):
+    '''
+    返回全部的图片
+    '''
+    @marshal_with(true_serializer(response_allImgs))
+    def get(self):
+        '''
+        返回整个分页图片
+        :return:
+        '''
+        try:
+            # 注册入参
+            parser = reqparse.RequestParser()
+            parser.add_argument('pageIndex', type=int, location=['headers','args'])
+            parser.add_argument('pageSize', type=int, location=['headers','args'])
+            # 获取入参
+            args = parser.parse_args()
+            pageIndex = args['pageIndex'] or 1
+            pageSize = args['pageSize'] or 12
+
+            search_img = girls_img.query.order_by(girls_img.id.asc())
+            imgs = search_img.paginate(pageIndex,per_page=pageSize, error_out=False)
+
+            count = imgs.total
+            totalPage = math.floor(count/pageSize)
+            list = []
+            for item in imgs.items:
+                list.append({
+                    'id': item.id,
+                    'girls_album_id': item.girls_album_id,
+                    'img_url': item.img_url,
+                    'local_img_url': "/static/girlsImg/%s"%item.local_img_url,
+
+                })
+
+            return trueReturn({
+                'list': list,
+                'pageInfo': {
+                    'pageIndex': pageIndex,
+                    'pageSize': pageSize,
+                    'count': count,
+                    'totalPage': totalPage,
+                }
+            }, 'success')
+
+
+        except Exception as e:
+            raise Exception(e)
+            print(e)
+            return falseReturn('', e)
+
 
 
 

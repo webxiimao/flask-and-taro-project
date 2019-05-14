@@ -68,6 +68,8 @@ class girls_tag(db.Model):
     title = db.Column(db.String(256))
     tag = db.Column(db.String(48), nullable=False, unique=True)
     albums = db.relationship('girls_album', backref="tag", lazy="dynamic")
+    cover_img = db.Column(db.String(1024))
+    local_cover_img = db.Column(db.String(1024))
 
     def __repr__(self):
         return '<girls_tag {}>'.format(self.tag)
@@ -88,7 +90,7 @@ class girls_album(db.Model):
     imgs = db.relationship('girls_img', backref="album", lazy="dynamic")
 
     def __repr__(self):
-        return '<girls_album {}>'.format(self.tag)
+        return '<girls_album {}>'.format(self.title)
 
 
 
@@ -99,14 +101,15 @@ class girls_img(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     update_time = db.Column(db.DateTime, default=datetime.now)
     img_path = db.Column(db.String(256))
-    #爬虫相关 1:初始状态  2:正在进行   3:已完成
-    img_status = db.Column(db.Integer, default=1, nullable=False)
+    #爬虫相关 0:初始状态  1:正在进行   2:已完成
+    img_status = db.Column(db.Integer, default=0, nullable=False)
     # init_url = db.Column(db.String(1024))
     img_url = db.Column(db.String(1024))
+    local_img_url = db.Column(db.String(1024))
     girls_album_id = db.Column(db.Integer ,db.ForeignKey('girls_album.id'))
 
     def __repr__(self):
-        return '<girls_img {}>'.format(self.tag)
+        return '<girls_img {}>'.format(self.img_url)
 
 
 
